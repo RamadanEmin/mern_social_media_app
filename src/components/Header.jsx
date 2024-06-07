@@ -4,8 +4,7 @@ const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
 
     return (
-        <Flex justifyContent={'space-between'} mt={6} mb='12'>
-
+        <Flex justifyContent={'center'} mt={6} mb='12'>
             <Image
                 cursor={'pointer'}
                 alt='logo'
