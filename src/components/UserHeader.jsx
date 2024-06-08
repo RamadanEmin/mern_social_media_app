@@ -27,7 +27,7 @@ const UserHeader = () => {
             <Flex justifyContent={'space-between'} w={'full'}>
                 <Box>
                     <Text fontSize={'2xl'} fontWeight={'bold'}>
-                    Mark Zuckerberg
+                        Mark Zuckerberg
                     </Text>
                     <Flex gap={2} alignItems={'center'}>
                         <Text fontSize={'sm'}>markzuckerberg</Text>
@@ -40,7 +40,10 @@ const UserHeader = () => {
                     <Avatar
                         name="Mark Zuckerberg"
                         src="/zuck-avatar.png"
-                        size={'xl'}
+                        size={{
+                            base: 'md',
+                            md: 'xl'
+                        }}
                     />
                 </Box>
             </Flex>
