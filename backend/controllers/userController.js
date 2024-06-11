@@ -47,7 +47,7 @@ const loginUser = async (req, res) => {
 		const user = await User.findOne({ username });
 		const isPasswordCorrect = await bcrypt.compare(password, user?.password || '');
 
-		if (!user || !isPasswordCorrect){
+		if (!user || !isPasswordCorrect) {
 			return res.status(400).json({ error: 'Invalid username or password!' });
 		}
 
@@ -83,10 +83,11 @@ const followUnFollowUser = async (req, res) => {
 		const userToModify = await User.findById(id);
 		const currentUser = await User.findById(req.user._id);
 
-		if (id === req.user._id.toString())
+		if (id === req.user._id.toString()) {
 			return res.status(400).json({ error: 'You cannot follow/unfollow yourself!' });
+		}
 
-		if (!userToModify || !currentUser){
+		if (!userToModify || !currentUser) {
 			return res.status(400).json({ error: 'User not found!' });
 		}
 
@@ -107,9 +108,45 @@ const followUnFollowUser = async (req, res) => {
 	}
 };
 
+const updateUser = async (req, res) => {
+	const { name, email, username, password, bio, profilePic } = req.body;
+
+	const userId = req.user._id;
+	try {
+		let user = await User.findById(userId);
+		if (!user) {
+			return res.status(400).json({ error: 'User not found!' });
+		}
+
+		if (req.params.id !== userId.toString()) {
+			return res.status(400).json({ error: "You cannot update other user's profile!" });
+		}
+
+		if (password) {
+			const salt = await bcrypt.genSalt(10);
+			const hashedPassword = await bcrypt.hash(password, salt);
+			user.password = hashedPassword;
+		}
+
+		user.name = name || user.name;
+		user.email = email || user.email;
+		user.username = username || user.username;
+		user.profilePic = profilePic || user.profilePic;
+		user.bio = bio || user.bio;
+
+		user = await user.save();
+
+		res.status(200).json({ message: 'Profile updated successfully.', user });
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+		console.log('Error in updateUser: ', err.message);
+	}
+};
+
 export {
 	signupUser,
 	loginUser,
 	logoutUser,
-	followUnFollowUser
+	followUnFollowUser,
+	updateUser
 };
