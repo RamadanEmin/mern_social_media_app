@@ -26,11 +26,25 @@ const createPost = async (req, res) => {
         const newPost = new Post({ postedBy, text, img });
         await newPost.save();
 
-        res.status(201).json({ message: 'Post created successfully' }, newPost);
+        res.status(201).json({ message: 'Post created successfully', newPost });
     } catch (err) {
         res.status(500).json({ error: err.message });
         console.log(err);
     }
 };
 
-export { createPost };
+const getPost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found!' });
+        }
+
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export { createPost, getPost };
