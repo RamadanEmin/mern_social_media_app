@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import {
     Button,
     Flex,
@@ -10,8 +11,24 @@ import {
     Avatar,
     Center,
 } from '@chakra-ui/react';
+import { useRecoilState } from 'recoil';
+import userAtom from '../atoms/userAtom';
+import usePreviewImg from '../hooks/usePreviewImg';
 
 export default function UpdateProfilePage() {
+    const [user, setUser] = useRecoilState(userAtom);
+    const [inputs, setInputs] = useState({
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        bio: user.bio,
+        password: ''
+    });
+
+    const fileRef = useRef(null);
+
+    const { handleImageChange, imgUrl } = usePreviewImg();
+
     return (
         <Flex align={'center'} justify={'center'} my={6}>
             <Stack
@@ -30,10 +47,13 @@ export default function UpdateProfilePage() {
                     <FormLabel>User Icon</FormLabel>
                     <Stack direction={['column', 'row']} spacing={6}>
                         <Center>
-                            <Avatar size="xl" src="https://bit.ly/sage-adebayo" />
+                            <Avatar size="xl" boxShadow={'md'} src={imgUrl || user.profilePic} />
                         </Center>
-                        <Center w="full">
-                            <Button w="full">Change Avatar</Button>
+                        <Center w='full'>
+                            <Button w='full' onClick={() => fileRef.current.click()}>
+                                Change Avatar
+                            </Button>
+                            <Input type='file' hidden ref={fileRef} onChange={handleImageChange} />
                         </Center>
                     </Stack>
                 </FormControl>
@@ -43,6 +63,8 @@ export default function UpdateProfilePage() {
                         placeholder="John Doe"
                         _placeholder={{ color: 'gray.500' }}
                         type="text"
+                        value={inputs.name}
+                        onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
                     />
                 </FormControl>
                 <FormControl isRequired>
@@ -51,6 +73,8 @@ export default function UpdateProfilePage() {
                         placeholder="johndoe"
                         _placeholder={{ color: 'gray.500' }}
                         type="text"
+                        value={inputs.username}
+                        onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
                     />
                 </FormControl>
                 <FormControl isRequired>
@@ -59,6 +83,8 @@ export default function UpdateProfilePage() {
                         placeholder="your-email@example.com"
                         _placeholder={{ color: 'gray.500' }}
                         type="email"
+                        value={inputs.email}
+                        onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
                     />
                 </FormControl>
                 <FormControl isRequired>
@@ -67,6 +93,8 @@ export default function UpdateProfilePage() {
                         placeholder="Your bio."
                         _placeholder={{ color: 'gray.500' }}
                         type="text"
+                        value={inputs.bio}
+                        onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
                     />
                 </FormControl>
                 <FormControl isRequired>
@@ -75,6 +103,8 @@ export default function UpdateProfilePage() {
                         placeholder="password"
                         _placeholder={{ color: 'gray.500' }}
                         type="password"
+                        value={inputs.password}
+                        onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                     />
                 </FormControl>
                 <Stack spacing={6} direction={['column', 'row']}>
@@ -93,7 +123,8 @@ export default function UpdateProfilePage() {
                         w="full"
                         _hover={{
                             bg: 'green.500',
-                        }}>
+                        }}
+                    >
                         Submit
                     </Button>
                 </Stack>
