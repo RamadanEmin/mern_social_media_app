@@ -4,10 +4,10 @@ import App from './App.jsx';
 import { ChakraProvider } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
 import { extendTheme } from '@chakra-ui/theme-utils';
-
-import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+
+import './index.css';
 
 const styles = {
     global: (props) => ({
