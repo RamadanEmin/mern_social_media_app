@@ -13,8 +13,7 @@ const useShowToast = () => {
 				duration: 3000,
 				isClosable: true
 			});
-		},
-		[toast]
+		}, [toast]
 	);
 
 	return showToast;
