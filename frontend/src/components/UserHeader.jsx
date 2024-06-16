@@ -9,11 +9,14 @@ import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
+import useShowToast from '../hooks/useShowToast';
 
 const UserHeader = ({ user }) => {
     const toast = useToast();
     const currentUser = useRecoilValue(userAtom);
     const [following, setFollowing] = useState(user.followers.includes(currentUser._id));
+
+    const showToast = useShowToast();
 
     const copyURL = () => {
         const currentURL = window.location.href;
@@ -26,6 +29,35 @@ const UserHeader = ({ user }) => {
                 isClosable: true
             });
         });
+    };
+
+    const handleFollowUnfollow = async () => {
+        try {
+            const res = await fetch(`/api/users/follow/${user._id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await res.json();
+
+            if (data.error) {
+                showToast('Error', data.error, 'error');
+                return;
+            }
+
+            if (following) {
+				showToast('Success', `Unfollowed ${user.name}`, 'success');
+				user.followers.pop();
+			} else {
+				showToast('Success', `Followed ${user.name}`, 'success');
+				user.followers.push(currentUser?._id);
+			}
+
+            setFollowing(!following);
+        } catch (error) {
+            showToast('Error', error, 'error');
+        }
     };
 
     return (
@@ -73,7 +105,7 @@ const UserHeader = ({ user }) => {
                 </Link>
             )}
             {currentUser?._id !== user._id && (
-                <Button size={'sm'} >
+                <Button size={'sm'} onClick={handleFollowUnfollow}>
                     {following ? 'Unfollow' : 'Follow'}
                 </Button>
             )}
