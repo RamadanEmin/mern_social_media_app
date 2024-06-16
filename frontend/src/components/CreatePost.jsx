@@ -18,14 +18,31 @@ import {
     useColorModeValue,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import usePreviewImg from '../hooks/usePreviewImg';
 import { BsFillImageFill } from 'react-icons/bs';
 
+const MAX_CHAR = 500;
+
 const CreatePost = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [postText, setPostText] = useState('');
     const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
     const imageRef = useRef(null);
+    const [remainingChar, setRemainingChar] = useState(MAX_CHAR);
+
+    const handleTextChange = (e) => {
+        const inputText = e.target.value;
+
+        if (inputText.length > MAX_CHAR) {
+            const truncatedText = inputText.slice(0, MAX_CHAR);
+            setPostText(truncatedText);
+            setRemainingChar(0);
+        } else {
+            setPostText(inputText);
+            setRemainingChar(MAX_CHAR - inputText.length);
+        }
+    };
 
     return (
         <>
@@ -50,9 +67,11 @@ const CreatePost = () => {
                         <FormControl>
                             <Textarea
                                 placeholder='Post content goes here..'
+                                onChange={handleTextChange}
+                                value={postText}
                             />
                             <Text fontSize='xs' fontWeight='bold' textAlign={'right'} m={'1'} color={'gray.800'}>
-                                500/500
+                                {remainingChar}/{MAX_CHAR}
                             </Text>
 
                             <Input type='file' hidden ref={imageRef} onChange={handleImageChange} />
@@ -81,7 +100,7 @@ const CreatePost = () => {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} >
+                        <Button colorScheme='blue' mr={3}>
                             Post
                         </Button>
                     </ModalFooter>
