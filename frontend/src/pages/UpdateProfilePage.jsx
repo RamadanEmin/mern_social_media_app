@@ -25,6 +25,7 @@ export default function UpdateProfilePage() {
         bio: user.bio,
         password: ''
     });
+    const [updating, setUpdating] = useState(false);
 
     const fileRef = useRef(null);
 
@@ -34,6 +35,11 @@ export default function UpdateProfilePage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (updating) {
+            return;
+        }
+        setUpdating(true);
 
         try {
             const res = await fetch(`/api/users/update/${user._id}`, {
@@ -57,8 +63,10 @@ export default function UpdateProfilePage() {
         } catch (error) {
             showToast('Error', error, 'error');
         }
+        finally {
+			setUpdating(false);
+		}
     };
-
 
     return (
         <form onSubmit={handleSubmit}>
@@ -156,6 +164,7 @@ export default function UpdateProfilePage() {
                                 bg: 'green.500',
                             }}
                             type='submit'
+                            isLoading={updating}
                         >
                             Submit
                         </Button>
