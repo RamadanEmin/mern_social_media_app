@@ -26,9 +26,9 @@ const createPost = async (req, res) => {
         }
 
         if (img) {
-			const uploadedResponse = await cloudinary.uploader.upload(img);
-			img = uploadedResponse.secure_url;
-		}
+            const uploadedResponse = await cloudinary.uploader.upload(img);
+            img = uploadedResponse.secure_url;
+        }
 
         const newPost = new Post({ postedBy, text, img });
         await newPost.save();
@@ -128,21 +128,37 @@ const replyToPost = async (req, res) => {
 };
 
 const getFeedPosts = async (req, res) => {
-	try {
-		const userId = req.user._id;
-		const user = await User.findById(userId);
-		if (!user) {
-			return res.status(404).json({ error: 'User not found!' });
-		}
+    try {
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found!' });
+        }
 
-		const following = user.following;
+        const following = user.following;
 
-		const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
+        const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
 
-		res.status(200).json(feedPosts);
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-	}
+        res.status(200).json(feedPosts);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+const getUserPosts = async (req, res) => {
+    const { username } = req.params;
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found!' });
+        }
+
+        const posts = await Post.find({ postedBy: user._id }).sort({ createdAt: -1 });
+
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 export {
@@ -151,5 +167,6 @@ export {
     deletePost,
     likeUnlikePost,
     replyToPost,
-    getFeedPosts
+    getFeedPosts,
+    getUserPosts
 };
