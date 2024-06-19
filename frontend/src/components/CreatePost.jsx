@@ -125,7 +125,7 @@ const CreatePost = () => {
                                     onClick={() => {
                                         setImgUrl('');
                                     }}
-                                    bg={'gray.800'}
+                                    bg={'gray.500'}
                                     position={'absolute'}
                                     top={2}
                                     right={2}
