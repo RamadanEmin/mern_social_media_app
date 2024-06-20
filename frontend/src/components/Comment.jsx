@@ -1,6 +1,6 @@
 import { Avatar, Divider, Flex, Text } from '@chakra-ui/react';
 
-const Comment = ({ reply }) => {
+const Comment = ({ reply, lastReply }) => {
     return (
         <>
             <Flex gap={4} py={2} my={2} w={'full'}>
@@ -14,7 +14,7 @@ const Comment = ({ reply }) => {
                     <Text>{reply.text}</Text>
                 </Flex>
             </Flex>
-            <Divider />
+            {!lastReply ? <Divider /> : null}
         </>
     );
 };

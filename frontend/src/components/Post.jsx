@@ -10,7 +10,7 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 
-const Post = ({ post, postedBy }) => {
+const Post = ({ post, postedBy, setPosts }) => {
     const [user, setUser] = useState(null);
     const currentUser = useRecoilValue(userAtom);
 
@@ -23,7 +23,7 @@ const Post = ({ post, postedBy }) => {
             try {
                 const res = await fetch('/api/users/profile/' + postedBy);
                 const data = await res.json();
-                
+
                 if (data.error) {
                     showToast('Error', data.error, 'error');
                     return;
@@ -39,27 +39,28 @@ const Post = ({ post, postedBy }) => {
     }, [postedBy, showToast]);
 
     const handleDeletePost = async (e) => {
-		try {
-			e.preventDefault();
-			if (!window.confirm('Are you sure you want to delete this post?')){
+        try {
+            e.preventDefault();
+            if (!window.confirm('Are you sure you want to delete this post?')) {
                 return;
             }
 
-			const res = await fetch(`/api/posts/${post._id}`, {
-				method: 'DELETE',
-			});
-			const data = await res.json();
+            const res = await fetch(`/api/posts/${post._id}`, {
+                method: 'DELETE',
+            });
+            const data = await res.json();
 
-			if (data.error) {
-				showToast('Error', data.error, 'error');
-				return;
-			}
+            if (data.error) {
+                showToast('Error', data.error, 'error');
+                return;
+            }
 
-			showToast('Success', 'Post deleted', 'success');
-		} catch (error) {
-			showToast('Error', error.message, 'error');
-		}
-	};
+            showToast('Success', 'Post deleted', 'success');
+            setPosts((prev) => prev.filter((p) => p._id !== post._id));
+        } catch (error) {
+            showToast('Error', error.message, 'error');
+        }
+    };
 
     if (!user) {
         return null;
@@ -149,7 +150,7 @@ const Post = ({ post, postedBy }) => {
                     )}
 
                     <Flex gap={3} my={1}>
-                        <Actions post={post}/>
+                        <Actions post={post} />
                     </Flex>
                 </Flex>
             </Flex>
