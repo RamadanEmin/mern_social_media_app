@@ -3,9 +3,38 @@ import Actions from '../components/Actions';
 import Comment from '../components/Comment';
 import { BsThreeDots } from 'react-icons/bs';
 import useGetUserProfile from '../hooks/useGetUserProfile';
+import useShowToast from '../hooks/useShowToast';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const PostPage = () => {
     const { user, loading } = useGetUserProfile();
+    const [post, setPost] = useState(null);
+
+    const { pid } = useParams();
+
+    const showToast = useShowToast();
+
+    useEffect(() => {
+        const getPost = async () => {
+            // setPost([]);
+            try {
+                const res = await fetch(`/api/posts/${pid}`);
+                const data = await res.json();
+
+                if (data.error) {
+                    showToast('Error', data.error, 'error');
+                    return;
+                }
+                console.log(data);
+
+                setPost(data);
+            } catch (error) {
+                showToast('Error', error.message, 'error');
+            }
+        };
+        getPost();
+    }, [showToast, pid]);
 
     if (!user && loading) {
         return (
@@ -14,11 +43,16 @@ const PostPage = () => {
             </Flex>
         );
     }
+
+    if (!post) {
+        return null;
+    }
+
     return (
         <>
             <Flex>
                 <Flex w={'full'} alignItems={'center'} gap={3}>
-                    <Avatar src={user.profilePic}  size={'md'} name={user.username} />
+                    <Avatar src={user.profilePic} size={'md'} name={user.username} />
                     <Flex>
                         <Text fontSize={'sm'} fontWeight={'bold'}>
                             {user.username}
@@ -34,7 +68,7 @@ const PostPage = () => {
                 </Flex>
             </Flex>
 
-            <Text my={3}>Let&apos;s talk about threats.</Text>
+            <Text my={3}>{post.text}</Text>
 
             <Box borderRadius={6} overflow={'hidden'} border={'1px solid'} borderColor={'gray.light'}>
                 <Image src={'/post1.png'} w={'full'} />
