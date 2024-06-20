@@ -42,27 +42,27 @@ const PostPage = () => {
     }, [showToast, pid]);
 
     const handleDeletePost = async () => {
-		try {
-			if (!window.confirm('Are you sure you want to delete this post?')){
+        try {
+            if (!window.confirm('Are you sure you want to delete this post?')) {
                 return;
             }
 
-			const res = await fetch(`/api/posts/${post._id}`, {
-				method: 'DELETE',
-			});
-			const data = await res.json();
+            const res = await fetch(`/api/posts/${post._id}`, {
+                method: 'DELETE',
+            });
+            const data = await res.json();
 
-			if (data.error) {
-				showToast('Error', data.error, 'error');
-				return;
-			}
+            if (data.error) {
+                showToast('Error', data.error, 'error');
+                return;
+            }
 
-			showToast('Success', 'Post deleted', 'success');
-			navigate(`/${user.username}`);
-		} catch (error) {
-			showToast('Error', error.message, 'error');
-		}
-	};
+            showToast('Success', 'Post deleted', 'success');
+            navigate(`/${user.username}`);
+        } catch (error) {
+            showToast('Error', error.message, 'error');
+        }
+    };
 
     if (!user && loading) {
         return (
@@ -122,13 +122,12 @@ const PostPage = () => {
             </Flex>
 
             <Divider my={4} />
-            {/* <Comment
-                comment='Looks really good!'
-                createdAt='2d'
-                likes={100}
-                username='johndoe'
-                userAvatar='https://bit.ly/dan-abramov'
-            /> */}
+            {post.replies.map((reply) => (
+                <Comment
+                    key={reply._id}
+                    reply={reply}
+                />
+            ))}
         </>
     );
 };
