@@ -1,4 +1,5 @@
 import User from '../models/userModel.js';
+import Post from '../models/postModel.js';
 import bcrypt from 'bcryptjs';
 import generateTokenAndSetCookie from '../utils/generateTokenAndSetCookie.js';
 import { v2 as cloudinary } from 'cloudinary';
@@ -115,15 +116,14 @@ const updateUser = async (req, res) => {
 	let { profilePic } = req.body;
 
 	const userId = req.user._id;
-	
 	try {
 		let user = await User.findById(userId);
 		if (!user) {
-			return res.status(400).json({ error: 'User not found!' });
+			return res.status(400).json({ error: 'User not found' });
 		}
 
 		if (req.params.id !== userId.toString()) {
-			return res.status(400).json({ error: "You cannot update other user's profile!" });
+			return res.status(400).json({ error: 'You cannot update other user\'s profile' });
 		}
 
 		if (password) {
@@ -149,9 +149,20 @@ const updateUser = async (req, res) => {
 
 		user = await user.save();
 
+		await Post.updateMany(
+			{ 'replies.userId': userId },
+			{
+				$set: {
+					'replies.$[reply].username': user.username,
+					'replies.$[reply].userProfilePic': user.profilePic
+				}
+			},
+			{ arrayFilters: [{ 'reply.userId': userId }] }
+		);
+
 		user.password = null;
 
-		res.status(200).json({ message: 'Profile updated successfully.', user });
+		res.status(200).json(user);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 		console.log('Error in updateUser: ', err.message);
