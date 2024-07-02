@@ -16,7 +16,7 @@ const Message = ({ ownMessage }) => {
             ) : (
                 <Flex gap={2}>
                     <Avatar src='' w='7' h={7} />
-                    <Text bg={'blue.400'} maxW={'350px'} p={1} borderRadius={'md'}>
+                    <Text bg={'gray.400'} maxW={'350px'} p={1} borderRadius={'md'} color={'black'}>
                         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae id reprehenderit ullam debitis numquam
                         veritatis, odit quia ipsam quis harum quos assumenda? Magnam fuga aut, non a inventore quaerat
                         temporibus, reprehenderit harum excepturi autem aspernatur voluptatum laborum commodi voluptate qui
