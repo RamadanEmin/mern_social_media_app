@@ -67,6 +67,7 @@ async function getMessages(req, res) {
 
 async function getConversations(req, res) {
 	const userId = req.user._id;
+
 	try {
 		const conversations = await Conversation.find({ participants: userId }).populate({
 			path: 'participants',
