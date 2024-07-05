@@ -35,7 +35,6 @@ const ChatPage = () => {
         getConversations();
     }, [showToast, setConversations]);
 
-
     return (
         <Box
             position={'absolute'}
@@ -79,14 +78,14 @@ const ChatPage = () => {
                             </Flex>
                         ))}
 
-                    {!loadingConversations &&
+                    {!loadingConversations && (
                         conversations.map((conversation) => (
                             <Conversation
                                 key={conversation._id}
                                 conversation={conversation}
                             />
                         ))
-                    }
+                    )}
 
                 </Flex>
                 {/* <Flex
