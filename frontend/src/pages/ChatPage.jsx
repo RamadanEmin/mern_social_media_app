@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue } from '@chakra-ui/react';
 import Conversation from '../components/Conversation';
-// import { GiConversation } from 'react-icons/gi';
+import { GiConversation } from 'react-icons/gi';
 import MessageContainer from '../components/MessageContainer';
 import useShowToast from '../hooks/useShowToast';
 import { useRecoilState } from 'recoil';
@@ -88,7 +88,7 @@ const ChatPage = () => {
                     )}
 
                 </Flex>
-                {/* <Flex
+                <Flex
                     flex={70}
                     borderRadius={'md'}
                     p={2}
@@ -99,7 +99,7 @@ const ChatPage = () => {
                 >
                     <GiConversation size={100} />
                     <Text fontSize={20}>Select a conversation to start messaging</Text>
-                </Flex> */}
+                </Flex>
                 <MessageContainer />
             </Flex>
         </Box>
