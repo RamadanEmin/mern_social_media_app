@@ -1,13 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue } from '@chakra-ui/react';
 import Conversation from '../components/Conversation';
 // import { GiConversation } from 'react-icons/gi';
 import MessageContainer from '../components/MessageContainer';
 import useShowToast from '../hooks/useShowToast';
-
+import { useRecoilState } from 'recoil';
+import { conversationsAtom } from '../atoms/messagesAtom';
 
 const ChatPage = () => {
+    const [loadingConversations, setLoadingConversations] = useState(true);
+    const [conversations, setConversations] = useRecoilState(conversationsAtom);
+
     const showToast = useShowToast();
 
     useEffect(() => {
@@ -20,14 +24,16 @@ const ChatPage = () => {
                     return;
                 }
 
-                console.log(data);
+                setConversations(data);
             } catch (error) {
                 showToast('Error', error.message, 'error');
+            } finally {
+                setLoadingConversations(false);
             }
         };
 
         getConversations();
-    }, [showToast]);
+    }, [showToast, setConversations]);
 
 
     return (
@@ -59,7 +65,8 @@ const ChatPage = () => {
                             </Button>
                         </Flex>
                     </form>
-                    {false &&
+
+                    {loadingConversations &&
                         [0, 1, 2, 3, 4].map((_, i) => (
                             <Flex key={i} gap={4} alignItems={'center'} p={'1'} borderRadius={'md'}>
                                 <Box>
@@ -72,9 +79,15 @@ const ChatPage = () => {
                             </Flex>
                         ))}
 
-                    <Conversation />
-                    <Conversation />
-                    <Conversation />
+                    {!loadingConversations &&
+                        conversations.map((conversation) => (
+                            <Conversation
+                                key={conversation._id}
+                                conversation={conversation}
+                            />
+                        ))
+                    }
+
                 </Flex>
                 {/* <Flex
                     flex={70}
