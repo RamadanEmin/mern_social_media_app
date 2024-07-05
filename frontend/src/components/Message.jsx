@@ -1,26 +1,26 @@
 import { Avatar, Flex, Text } from '@chakra-ui/react';
+import { useRecoilValue } from 'recoil';
+import { selectedConversationAtom } from '../atoms/messagesAtom';
+import userAtom from '../atoms/userAtom';
 
-const Message = ({ ownMessage }) => {
+const Message = ({ ownMessage, message }) => {
+    const selectedConversation = useRecoilValue(selectedConversationAtom);
+    const user = useRecoilValue(userAtom);
+
     return (
         <>
             {ownMessage ? (
                 <Flex gap={2} alignSelf={'flex-end'}>
                     <Text bg={'blue.400'} maxW={'350px'} p={1} borderRadius={'md'}>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae id reprehenderit ullam debitis numquam
-                        veritatis, odit quia ipsam quis harum quos assumenda? Magnam fuga aut, non a inventore quaerat
-                        temporibus, reprehenderit harum excepturi autem aspernatur voluptatum laborum commodi voluptate qui
-                        dignissimos, repudiandae modi ratione est unde esse voluptates perferendis repellendus?
+                        {message.text}
                     </Text>
-                    <Avatar src='' w='7' h={7} />
+                    <Avatar src={user.profilePic} w='7' h={7} />
                 </Flex>
             ) : (
                 <Flex gap={2}>
-                    <Avatar src='' w='7' h={7} />
+                    <Avatar src={selectedConversation.userProfilePic} w='7' h={7} />
                     <Text bg={'gray.400'} maxW={'350px'} p={1} borderRadius={'md'} color={'black'}>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae id reprehenderit ullam debitis numquam
-                        veritatis, odit quia ipsam quis harum quos assumenda? Magnam fuga aut, non a inventore quaerat
-                        temporibus, reprehenderit harum excepturi autem aspernatur voluptatum laborum commodi voluptate qui
-                        dignissimos, repudiandae modi ratione est unde esse voluptates perferendis repellendus?
+                        {message.text}
                     </Text>
                 </Flex>
             )}
