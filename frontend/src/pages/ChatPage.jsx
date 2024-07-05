@@ -6,11 +6,12 @@ import { GiConversation } from 'react-icons/gi';
 import MessageContainer from '../components/MessageContainer';
 import useShowToast from '../hooks/useShowToast';
 import { useRecoilState } from 'recoil';
-import { conversationsAtom } from '../atoms/messagesAtom';
+import { conversationsAtom, selectedConversationAtom } from '../atoms/messagesAtom';
 
 const ChatPage = () => {
     const [loadingConversations, setLoadingConversations] = useState(true);
     const [conversations, setConversations] = useRecoilState(conversationsAtom);
+    const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
 
     const showToast = useShowToast();
 
@@ -86,8 +87,9 @@ const ChatPage = () => {
                             />
                         ))
                     )}
-
                 </Flex>
+
+                {!selectedConversation._id && (             
                 <Flex
                     flex={70}
                     borderRadius={'md'}
@@ -100,7 +102,9 @@ const ChatPage = () => {
                     <GiConversation size={100} />
                     <Text fontSize={20}>Select a conversation to start messaging</Text>
                 </Flex>
-                <MessageContainer />
+                )}
+
+{selectedConversation._id && <MessageContainer />}
             </Flex>
         </Box>
     );
