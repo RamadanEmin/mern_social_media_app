@@ -49,9 +49,9 @@ const MessageContainer = () => {
             flexDirection={'column'}
         >
             <Flex w={'full'} h={12} alignItems={'center'} gap={2}>
-                <Avatar src='' size={'sm'} />
+                <Avatar src={selectedConversation.userProfilePic} size={'sm'} />
                 <Text display={'flex'} alignItems={'center'}>
-                    johndoe<Image src='/verified.png' w={4} h={4} ml={1} />
+                    {selectedConversation.username} <Image src='/verified.png' w={4} h={4} ml={1} />
                 </Text>
             </Flex>
 
@@ -91,7 +91,7 @@ const MessageContainer = () => {
                 }
             </Flex>
 
-            <MessageInput />
+            <MessageInput setMessages={setMessages} />
         </Flex>
     );
 };
