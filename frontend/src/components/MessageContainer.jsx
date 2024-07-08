@@ -15,12 +15,17 @@ const MessageContainer = () => {
 
     const showToast = useShowToast();
 
+    console.log('selectedConversation', selectedConversation);
+
     useEffect(() => {
         const getMessages = async () => {
             setLoadingMessages(true);
             setMessages([]);
 
             try {
+                if (selectedConversation.mock) {
+                    return;
+                }
                 const res = await fetch(`/api/messages/${selectedConversation.userId}`);
                 const data = await res.json();
 
@@ -38,7 +43,7 @@ const MessageContainer = () => {
         };
 
         getMessages();
-    }, [showToast, selectedConversation.userId]);
+    }, [showToast, selectedConversation.userId, selectedConversation.mock]);
 
     return (
         <Flex

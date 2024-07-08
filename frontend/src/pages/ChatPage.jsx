@@ -48,7 +48,6 @@ const ChatPage = () => {
                 setLoadingConversations(false);
             }
         };
-
         getConversations();
     }, [showToast, setConversations]);
 
