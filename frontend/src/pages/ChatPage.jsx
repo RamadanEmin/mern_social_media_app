@@ -70,6 +70,38 @@ const ChatPage = () => {
                 showToast('Error', 'You cannot message yourself', 'error');
                 return;
             }
+
+            const conversationAlreadyExists = conversations.find(
+                (conversation) => conversation.participants[0]._id === searchedUser._id
+            );
+
+            if (conversationAlreadyExists) {
+                setSelectedConversation({
+                    _id: conversationAlreadyExists._id,
+                    userId: searchedUser._id,
+                    username: searchedUser.username,
+                    userProfilePic: searchedUser.profilePic
+                });
+
+                return;
+            }
+
+            const mockConversation = {
+                mock: true,
+                lastMessage: {
+                    text: '',
+                    sender: ''
+                },
+                _id: Date.now(),
+                participants: [
+                    {
+                        _id: searchedUser._id,
+                        username: searchedUser.username,
+                        profilePic: searchedUser.profilePic
+                    }
+                ],
+            };
+            setConversations((prevConvs) => [...prevConvs, mockConversation]);
         } catch (error) {
             showToast('Error', error.message, 'error');
         } finally {
