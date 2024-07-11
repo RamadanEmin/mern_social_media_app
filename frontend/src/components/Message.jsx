@@ -12,7 +12,7 @@ const Message = ({ ownMessage, message }) => {
         <>
             {ownMessage ? (
                 <Flex gap={2} alignSelf={'flex-end'}>
-                    {false && (
+                    {message.text && (
                         <Flex bg={'green.800'} maxW={'350px'} p={1} borderRadius={'md'}>
                             <Text color={'white'}>{message.text}</Text>
                             <Box
@@ -25,10 +25,10 @@ const Message = ({ ownMessage, message }) => {
                             </Box>
                         </Flex>
                     )}
-                    {true && (
+                    {message.img && (
                         <Flex mt={5} w={'200px'}>
                             <Image
-                                src={'https://images.unsplash.com/photo-1713994099171-dcfc05d556aa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8'}
+                                src={message.img}
                                 alt='Message image'
                                 borderRadius={4}
                             />
@@ -49,7 +49,7 @@ const Message = ({ ownMessage, message }) => {
                     {message.img && (
                         <Flex mt={5} w={'200px'}>
                             <Image
-                                src={'https://images.unsplash.com/photo-1713994099171-dcfc05d556aa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8'}
+                                src={message.img}
                                 alt='Message image'
                                 borderRadius={4}
                             />
