@@ -1,10 +1,11 @@
-import { Flex, Image, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react';
+import { Flex, Image, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
 import useShowToast from '../hooks/useShowToast';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { conversationsAtom, selectedConversationAtom } from '../atoms/messagesAtom';
 import { BsFillImageFill } from 'react-icons/bs';
+import usePreviewImg from '../hooks/usePreviewImg';
 
 const MessageInput = ({ setMessages }) => {
     const [messageText, setMessageText] = useState('');
@@ -12,6 +13,7 @@ const MessageInput = ({ setMessages }) => {
     const setConversations = useSetRecoilState(conversationsAtom);
     const imageRef = useRef(null);
     const { onClose } = useDisclosure();
+    const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
 
     const showToast = useShowToast();
 
@@ -82,12 +84,13 @@ const MessageInput = ({ setMessages }) => {
             </form>
             <Flex flex={5} cursor={'pointer'}>
                 <BsFillImageFill size={20} onClick={() => imageRef.current.click()} />
-                <Input type={'file'} hidden ref={imageRef} />
+                <Input type={'file'} hidden ref={imageRef} onChange={handleImageChange} />
             </Flex>
             <Modal
-                isOpen={true}
+                isOpen={imgUrl}
                 onClose={() => {
                     onClose();
+                    setImgUrl('');
                 }}
             >
                 <ModalOverlay />
@@ -96,7 +99,7 @@ const MessageInput = ({ setMessages }) => {
                     <ModalCloseButton />
                     <ModalBody>
                         <Flex mt={5} w={'full'}>
-                            <Image src={'https://plus.unsplash.com/premium_photo-1720012323443-1cc54a53990e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyOXx8fGVufDB8fHx8fA%3D%3D'} />
+                            <Image src={imgUrl} />
                         </Flex>
                         <Flex justifyContent={'flex-end'} my={2}>
                             <IoSendSharp size={24} cursor={'pointer'} />
