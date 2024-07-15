@@ -202,7 +202,7 @@ const getSuggestedUsers = async (req, res) => {
 			{
 				$match: {
 					_id: { $ne: userId },
-				},
+				}
 			},
 			{
 				$sample: { size: 10 },
